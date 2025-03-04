@@ -1,7 +1,7 @@
 #include <FastLED.h>
 
-#define START_LED 9
-#define END_LED 49
+#define START_LED 40
+#define END_LED 9
 #define LED_PIN     6  // Pin where the LED strip is connected
 #define NUM_LEDS    60 // Total number of LEDs
 #define LED_TYPE    WS2812B
@@ -41,11 +41,13 @@ void multiCometEffect() {
     FastLED.clear();
     hue += 2;  // Shift hue slightly for a rainbow effect
     
+    // Serial.print(":1 Position ");
+    // Serial.println(positions_rev[0]);
     for (int c = 0; c < NUM_COMETS; c++) {
         // Serial.print("Comet ");
         // Serial.print(c);
-        // Serial.print(": Position ");
-        // Serial.println(positions[c]);
+        // Serial.print(": Position_rev ");
+        // Serial.println(positions_rev[c]);
         for (int i = 0; i < COMET_LENGTH; i++) {
             int pos = positions[c] - i;
             int pos_rev = positions_rev[c] + i;
@@ -53,11 +55,20 @@ void multiCometEffect() {
             // Serial.println(pos);
             // Serial.print("pos_rev ");
             // Serial.println(pos_rev);
-            if (pos >= START_LED && pos <= END_LED) {
-                leds[pos] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
-            }
-            if ((pos_rev >= 0 && pos_rev < START_LED) || (pos_rev >= END_LED && pos_rev < NUM_LEDS)) {
-                leds[pos_rev] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+            if (END_LED > START_LED) {
+              if (pos >= START_LED && pos <= END_LED) {
+                  leds[pos] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+              }
+              if ((pos_rev >= 0 && pos_rev < START_LED) || (pos_rev >= END_LED && pos_rev < NUM_LEDS)) {
+                  leds[pos_rev] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+              }
+            } else {
+              if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos < END_LED)) {
+                  leds[pos] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+              }
+              if ((pos_rev < START_LED) && (pos_rev >= END_LED)) {
+                  leds[pos_rev] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+              }
             }
         }
         
@@ -72,7 +83,10 @@ void multiCometEffect() {
           if (positions[c] == END_LED) positions[c] = START_LED; // Wrap around instead of resetting to center
           if (positions_rev[c] == END_LED) positions_rev[c] = START_LED; // Wrap around instead of resetting to center          
         }
+        
     }
+    // Serial.print(":2 Position_rev ");
+    //   Serial.println(positions_rev[0]);
     
     FastLED.show();
     delay(50);
