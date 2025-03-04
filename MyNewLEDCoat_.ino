@@ -90,5 +90,5 @@ void multiCometEffect() {
     //   Serial.println(positions_rev[0]);
     
     FastLED.show();
-    delay(500);
+    delay(50);
 }
