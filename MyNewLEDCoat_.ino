@@ -1,12 +1,13 @@
 #include <FastLED.h>
 
-#define START_LED 10
-#define END_LED 50
+#define START_LED 9
+#define END_LED 49
 #define LED_PIN     6  // Pin where the LED strip is connected
 #define NUM_LEDS    60 // Total number of LEDs
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
-#define COMET_LENGTH 15  // Length of each comet
+#define COMET_LENGTH 5  // Length of each comet
+// #define NUM_COMETS  ((END_LED-START_LED) / COMET_LENGTH)  // Adjusted to eliminate gaps
 #define NUM_COMETS  (NUM_LEDS / COMET_LENGTH)  // Adjusted to eliminate gaps
 
 CRGB leds[NUM_LEDS];
@@ -61,12 +62,16 @@ void multiCometEffect() {
         }
         
         positions[c]++; // Move outward
-        if (positions[c] > END_LED ) positions[c] = START_LED; // Wrap around instead of resetting to center
-        
         positions_rev[c]--; // Move rev
-        
-        if (positions_rev[c] < 0 ) positions_rev[c] = NUM_LEDS ; // Wrap around instead of resetting to center
-        if (positions_rev[c] <= END_LED && positions_rev[c] > START_LED) positions_rev[c] = START_LED ; // Wrap around instead of resetting to center
+        if (END_LED > START_LED) {
+          if (positions[c] == END_LED + 1) positions[c] = START_LED + 1; // Wrap around instead of resetting to center
+          if (positions_rev[c] < 0 ) positions_rev[c] = NUM_LEDS ; // Wrap around instead of resetting to center
+          if (positions_rev[c] == END_LED) positions_rev[c] = START_LED; // Wrap around instead of resetting to center
+        } else {
+          if (positions[c] == NUM_LEDS) positions[c] = 0; // Wrap around instead of resetting to center
+          if (positions[c] == END_LED) positions[c] = START_LED; // Wrap around instead of resetting to center
+          if (positions_rev[c] == END_LED) positions_rev[c] = START_LED; // Wrap around instead of resetting to center          
+        }
     }
     
     FastLED.show();
