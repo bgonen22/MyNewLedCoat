@@ -8,7 +8,7 @@
 #define COLOR_ORDER GRB
 #define COMET_LENGTH 5  // Length of each comet
 // #define NUM_COMETS  ((END_LED-START_LED) / COMET_LENGTH)  // Adjusted to eliminate gaps
-#define NUM_COMETS  (NUM_LEDS / COMET_LENGTH)  // Adjusted to eliminate gaps
+#define NUM_COMETS  (NUM_LEDS / COMET_LENGTH) + 1  // Adjusted to eliminate gaps
 
 CRGB leds[NUM_LEDS];
 
@@ -43,7 +43,7 @@ void multiCometEffect() {
     
     // Serial.print(":1 Position ");
     // Serial.println(positions_rev[0]);
-    for (int c = 0; c < NUM_COMETS; c++) {
+    for (int c = 0; c < NUM_COMETS ; c++) {
         // Serial.print("Comet ");
         // Serial.print(c);
         // Serial.print(": Position_rev ");
@@ -55,19 +55,20 @@ void multiCometEffect() {
             // Serial.println(pos);
             // Serial.print("pos_rev ");
             // Serial.println(pos_rev);
+            CRGB color = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
             if (END_LED > START_LED) {
               if (pos >= START_LED && pos <= END_LED) {
-                  leds[pos] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+                  leds[pos] = color;
               }
               if ((pos_rev >= 0 && pos_rev < START_LED) || (pos_rev >= END_LED && pos_rev < NUM_LEDS)) {
-                  leds[pos_rev] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+                  leds[pos_rev] = color;
               }
             } else {
               if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos < END_LED)) {
-                  leds[pos] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+                  leds[pos] = color;
               }
               if ((pos_rev < START_LED) && (pos_rev >= END_LED)) {
-                  leds[pos_rev] = CHSV(hue + c * (255 / NUM_COMETS), 255, 255 - (i * (255 / COMET_LENGTH)));
+                  leds[pos_rev] = color;
               }
             }
         }
@@ -89,5 +90,5 @@ void multiCometEffect() {
     //   Serial.println(positions_rev[0]);
     
     FastLED.show();
-    delay(50);
+    delay(500);
 }
