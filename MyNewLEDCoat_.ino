@@ -2,8 +2,14 @@
 
 #define START_LED 50
 #define END_LED 21
-#define LED_PIN     6  // Pin where the LED strip is connected
+#define LED_PIN     7  // Pin where the LED strip is connected
 #define NUM_LEDS    60 // Total number of LEDs
+// HANDS
+#define NUM_LEDS_HANDS    15 // Total number of LEDs
+#define LED_PIN_HANDS     6  // Pin where the LED strip is connected
+uint8_t max_bright = 255; // Overall brightness definition. It can be changed on the fly.
+
+
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 #define COMET_LENGTH 5  // Length of each comet
@@ -11,11 +17,14 @@
 #define NUM_COMETS  ((NUM_LEDS / COMET_LENGTH) + 1)/2  // Adjusted to eliminate gaps
 
 CRGB leds[NUM_LEDS];
+CRGB leds_hands[NUM_LEDS];
 
 void setup() {
     Serial.begin(9600); // Initialize serial communication
 
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+    FastLED.addLeds<LED_TYPE, LED_PIN_HANDS, COLOR_ORDER>(leds_hands, NUM_LEDS_HANDS);
+    FastLED.setBrightness(max_bright);
     FastLED.clear();
     FastLED.show();
 }
@@ -103,7 +112,15 @@ void multiCometEffect() {
     }
     // Serial.print(":2 Position_rev ");
     //   Serial.println(positions_rev[0]);
-    
+    rainbow_wave(50, 10);                                      // Speed, delta hue values.
     FastLED.show();
-    delay(100);
+    delay(50);
 }
+void rainbow_wave(uint8_t thisSpeed, uint8_t deltaHue) {     // The fill_rainbow call doesn't support brightness levels.
+ 
+    // uint8_t thisHue = beatsin8(thisSpeed,0,255);                // A simple rainbow wave.
+    uint8_t thisHue = beat8(thisSpeed,255);                     // A simple rainbow march.
+  
+    fill_rainbow(leds_hands, NUM_LEDS_HANDS, thisHue, deltaHue);            // Use FastLED's fill_rainbow routine.
+ 
+} // rainbow_wave()
