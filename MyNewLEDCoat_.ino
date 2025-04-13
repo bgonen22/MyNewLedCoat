@@ -1,9 +1,9 @@
 #include <FastLED.h>
 
-#define START_LED 50
-#define END_LED 21
+#define START_LED 10
+#define END_LED 34
 #define LED_PIN     7  // Pin where the LED strip is connected
-#define NUM_LEDS    60 // Total number of LEDs
+#define NUM_LEDS    50 // Total number of LEDs
 // HANDS
 #define NUM_LEDS_HANDS    15 // Total number of LEDs
 #define LED_PIN_HANDS     6  // Pin where the LED strip is connected
@@ -44,13 +44,13 @@ void multiCometEffect() {
             // positions[i] = START_LED + NUM_LEDS / 2 + ((i - NUM_COMETS / 2) * COMET_LENGTH);
             // positions_rev[i] = START_LED - (NUM_LEDS / 2 + ((i - NUM_COMETS / 2) * COMET_LENGTH));
             positions[i] = (START_LED + (i * COMET_LENGTH))% NUM_LEDS;
-            positions_rev[i] = (START_LED - (i * COMET_LENGTH)) % NUM_LEDS;
-            // Serial.print("i ");
-            // Serial.print(i);
-            // Serial.print(" position ");
-            // Serial.print(positions[i]);
-            // Serial.print(" position_rev ");
-            // Serial.println(positions_rev[i]);
+            positions_rev[i] = ( (START_LED - (i * COMET_LENGTH)) % NUM_LEDS + NUM_LEDS ) % NUM_LEDS;
+            Serial.print("i ");
+            Serial.print(i);
+            Serial.print(" position ");
+            Serial.print(positions[i]);
+            Serial.print(" position_rev ");
+            Serial.println(positions_rev[i]);
         }
         initialized = true;
     }
