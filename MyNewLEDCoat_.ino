@@ -66,29 +66,38 @@ void multiCometEffect() {
         // Serial.print(": Position ");
         // Serial.println(positions[c]);
         for (int i = 0; i < COMET_LENGTH; i++) {
-        // for (int i = 0; i < 1; i++) {
-            int pos = positions[c] - i;
-            int pos_rev = positions_rev[c] + i;
-            // Serial.print("pos ");
-            // Serial.println(pos);
-            // Serial.print("pos_rev ");
-            // Serial.println(pos_rev);
-            CRGB color = CHSV(hue + c * (255 / (2*NUM_COMETS)), 255, 255 - (i * (255 / COMET_LENGTH)));
-            if (END_LED > START_LED) {
-              if (pos >= START_LED && pos <= END_LED) {
-                  leds[pos] = color;
-              }
-              if ((pos_rev >= 0 && pos_rev < START_LED) || (pos_rev >= END_LED && pos_rev < NUM_LEDS)) {
-                  leds[pos_rev] = color;
-              }
-            } else {
-              if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos < END_LED)) {
-                  leds[pos] = color;
-              }
-              if ((pos_rev < START_LED) && (pos_rev >= END_LED)) {
-                  leds[pos_rev] = color;
-              }
+          int pos = positions[c] - i;
+          int pos_rev = positions_rev[c] + i;
+          // Serial.print("pos ");
+          // Serial.println(pos);
+          // Serial.print("pos_rev ");
+          // Serial.println(pos_rev);
+          CRGB color = CHSV(hue + c * (255 / (2*NUM_COMETS)), 255, 255 - (i * (255 / COMET_LENGTH)));
+          if (END_LED > START_LED) {
+            if (pos < START_LED) {
+              pos = END_LED - (START_LED - pos);
+                leds[pos] = color;
+            } 
+            //else if (/*pos >= START_LED &&*/ pos <= END_LED) {
+                leds[pos] = color;
+            //}
+            if (pos_rev > START_LED && pos_rev < END_LED) { // the trace pixel is in the pos area, nead to wrap to the pos_rev area
+              pos_rev = END_LED + (pos_rev - START_LED) ;
+              leds[pos_rev] = color;
+            } else if (pos_rev >= NUM_LEDS) {
+              pos_rev = pos_rev - NUM_LEDS;
+              leds[pos_rev] = color;
+            } else if ((pos_rev >= 0 && pos_rev < START_LED) || (pos_rev >= END_LED && pos_rev < NUM_LEDS)) {
+              leds[pos_rev] = color;
             }
+          } else {
+            if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos < END_LED)) {
+                leds[pos] = color;
+            }
+            if ((pos_rev < START_LED) && (pos_rev >= END_LED)) {
+                leds[pos_rev] = color;
+            }
+          }
         }
         
         positions[c]++; // Move outward
@@ -114,7 +123,7 @@ void multiCometEffect() {
     //   Serial.println(positions_rev[0]);
     rainbow_wave(50, 10);                                      // Speed, delta hue values.
     FastLED.show();
-    delay(50);
+    delay(100);
 }
 void rainbow_wave(uint8_t thisSpeed, uint8_t deltaHue) {     // The fill_rainbow call doesn't support brightness levels.
  
