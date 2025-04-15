@@ -1,7 +1,9 @@
 #include <FastLED.h>
 
-#define START_LED 30
-#define END_LED 5
+// #define START_LED 30
+// #define END_LED 5
+#define START_LED 10
+#define END_LED 34
 #define LED_PIN     7  // Pin where the LED strip is connected
 #define NUM_LEDS    50 // Total number of LEDs
 // HANDS
@@ -91,13 +93,13 @@ void multiCometEffect() {
               leds[pos_rev] = color;
             }
           } else {
-            if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos < END_LED)) {
+            if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos <= END_LED)) {
                 leds[pos] = color;
             } else if (pos < 0) {
               pos = NUM_LEDS + pos;
               leds[pos] = color;
             } else if (pos < START_LED) {
-              pos = END_LED - (START_LED - pos);
+              pos = END_LED - (START_LED - pos - 1);
               leds[pos] = color;
             } 
             if ((pos_rev < START_LED) && (pos_rev >= END_LED)) {
@@ -123,7 +125,7 @@ void multiCometEffect() {
           if (positions_rev[c] == END_LED) positions_rev[c] = START_LED; // Wrap around instead of resetting to center
         } else {
           if (positions[c] == NUM_LEDS) positions[c] = 0; // Wrap around instead of resetting to center
-          if (positions[c] == END_LED) positions[c] = START_LED; // Wrap around instead of resetting to center
+          if (positions[c] == END_LED + 1) positions[c] = START_LED; // Wrap around instead of resetting to center
           if (positions_rev[c] == END_LED) positions_rev[c] = START_LED; // Wrap around instead of resetting to center          
         }
         
