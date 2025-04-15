@@ -1,7 +1,7 @@
 #include <FastLED.h>
 
-#define START_LED 10
-#define END_LED 34
+#define START_LED 30
+#define END_LED 5
 #define LED_PIN     7  // Pin where the LED strip is connected
 #define NUM_LEDS    50 // Total number of LEDs
 // HANDS
@@ -93,9 +93,18 @@ void multiCometEffect() {
           } else {
             if ((pos >= START_LED && pos <= NUM_LEDS) || (pos >= 0 && pos < END_LED)) {
                 leds[pos] = color;
-            }
+            } else if (pos < 0) {
+              pos = NUM_LEDS + pos;
+              leds[pos] = color;
+            } else if (pos < START_LED) {
+              pos = END_LED - (START_LED - pos);
+              leds[pos] = color;
+            } 
             if ((pos_rev < START_LED) && (pos_rev >= END_LED)) {
-                leds[pos_rev] = color;
+              leds[pos_rev] = color;
+            } else if (pos_rev > START_LED) {
+              pos_rev = END_LED + (pos_rev - START_LED);
+              leds[pos_rev] = color;
             }
           }
         }
